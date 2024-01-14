@@ -1,39 +1,68 @@
-import { useCollection, useCurrentUser, useDocument } from 'vuefire'
+import { useCollection, useCurrentUser } from 'vuefire'
 import { db } from '../connections/firebaseConfig'
-import { Timestamp, addDoc, collection, doc} from 'firebase/firestore'
+import { Timestamp, addDoc, collection, deleteDoc, doc, updateDoc} from 'firebase/firestore'
 
-const addTask = async (title: string) => {
+const addTask = async (title: string): Promise<void> => {
 	try {
-
 		const user = useCurrentUser().value
-		if (user?.uid !== null) {
-			const uid = user!.uid
-			
-			await addDoc(collection(db,'task'), {
-				_uid: uid,
-				title,
-				completed: false,
-				created: Timestamp.now()
-			})
-			console.log(uid)
-		}
-	} catch (err) {
-		alert(err)
+
+		if (!user || !user.uid) throw new Error('Usuário não autenticado ou UID não disponível.')
+
+		await addDoc(collection(db, user.uid), {
+			title,
+			completed: false,
+			created: Timestamp.now()
+		})
+
+	} catch (error) {
+		throw new Error('Não foi possível adicionar tarefa.')
+	}
+}
+
+const removeTask = async (taskUid: string): Promise<void> => {
+	try {
+		const currentUser = useCurrentUser().value
+		if (!currentUser || !currentUser.uid) throw new Error('Usuário não autenticado.')
+
+		await deleteDoc(doc(db, currentUser.uid, taskUid))
+	} catch (error) {
+		throw new Error('Erro ao remover tarefa.')
 	}
 }
 
 const getTask = () => {
 	try {
-		const uid = useCurrentUser().value?.uid
-		const colec = useCollection(collection(db, 'task'))
-		const userTasks = useDocument(doc(db, 'task', 'dwjxc454HVU9nnwfWiv2'))
-		return colec
-	} catch (err) {
-		return ''
+		const currentUser = useCurrentUser().value
+
+		if (!currentUser || !currentUser.uid) throw new Error('Usuário não autenticado.')
+
+		const taskCollection = collection(db, currentUser.uid)
+		const querySnapshot = useCollection(taskCollection)
+
+		return querySnapshot
+	} catch (error) {
+		throw new Error('Erro ao obter tarefas.')
+	}
+}
+
+const updateTask = async (taskUid: string, change: boolean): Promise<void> => {
+	try {
+		const currentUser = useCurrentUser().value
+		if (!currentUser || !currentUser.uid) throw new Error('Usuário não autenticado.')
+
+		const docRef = doc(db, currentUser.uid, taskUid)
+		await updateDoc(docRef, {
+			completed: change
+		})
+
+	} catch (error) {
+		throw new Error('Erro ao atualizar tarefa.')
 	}
 }
 
 export {
 	addTask,
-	getTask
+	getTask,
+	removeTask,
+	updateTask
 }

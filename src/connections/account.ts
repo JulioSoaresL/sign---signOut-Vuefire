@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { auth } from './firebaseConfig'
 import { routes } from '../routes/routes'
 
@@ -10,7 +10,6 @@ interface RegistrationResult {
 const registerUser = async (email: string, password: string): Promise<RegistrationResult> => {
 	try {
 		await createUserWithEmailAndPassword(auth, email, password)
-		alert('cadastrado com sucesso')
 		return { success: true, errorMessage: 'cadastrado' }
 	} catch (error) {
 		return { success: false, errorMessage: 'não cadastrado' }
@@ -23,19 +22,18 @@ const signIn = async (email: string, password: string) => {
 		const token = await credential.user.getIdToken()
 		localStorage.setItem('token', token)
 		routes.push('/about')
-		alert('logado')
 	} catch (err) {
-		alert('n logado')
+		throw new Error('Algo deu errado tente novamente')
 	}
 }
 
 const logout = async () => {
 	try {
-		await auth.signOut()
+		signOut(auth)
 		localStorage.removeItem('token')
 		routes.push('/')
 	} catch (err) {
-		return 'deslogado'
+		throw new Error('Erro ao deslogar')
 	}
 }
 
