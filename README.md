@@ -7,7 +7,7 @@ O projeto em questão é um **Gerenciador de tarefas** com sistema de autentica�
 
 | Login   | Lista de Tarefas
 |----------|:---------|
-| ![Tela inicial](image.png) |  ![Lista de Tarefas](image-1.png)|
+| ![Tela inicial](public/image.png) |  ![Lista de Tarefas](public/image-1.png)|
 
 ## Tecnologias Utilizadas
 
