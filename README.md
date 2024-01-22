@@ -5,9 +5,9 @@
 O projeto em questão é um **Gerenciador de tarefas** com sistema de autenticação para usuários. O Projeto permite o cadastro de novos usuários e o login dos mesmos, sendo assim cada usuário terá sua própria coleção de tarefas que serão indenpendentes dos demais usuários.
 
 
-| Login   | Lista de Tarefas
-|----------|:---------|
-| ![Tela inicial](public/image.png) |  ![Lista de Tarefas](public/image-1.png)|
+| Login   | Registrar | Lista de Tarefas
+|----------|---------|---------|
+| ![Logar](public/image.png) |  ![Registrar](public/image-2.png) | ![lista de tarefas](public/image-1.png) |
 
 ## Tecnologias Utilizadas
 
@@ -16,6 +16,7 @@ O projeto em questão é um **Gerenciador de tarefas** com sistema de autentica�
 - Vuefire
 - Firebase 9
 - Vite
+- Tailwind
 
 ## Objetivo
 
