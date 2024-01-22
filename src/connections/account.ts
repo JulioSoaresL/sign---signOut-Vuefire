@@ -12,6 +12,7 @@ const registerUser = async (email: string, password: string): Promise<Registrati
 		await createUserWithEmailAndPassword(auth, email, password)
 		return { success: true, errorMessage: 'cadastrado' }
 	} catch (error) {
+		alert('Erro ao cadastrar')
 		return { success: false, errorMessage: 'não cadastrado' }
 	}
 }
@@ -23,6 +24,7 @@ const signIn = async (email: string, password: string) => {
 		localStorage.setItem('token', token)
 		routes.push('/about')
 	} catch (err) {
+		alert('Não foi possível fazer o login')
 		throw new Error('Algo deu errado tente novamente')
 	}
 }

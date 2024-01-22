@@ -1,24 +1,67 @@
 <template>
-  <div class="form-container">
-    <form class="form">
-      <h2>Cadastro</h2>
-      <input v-model="signupData.email" type="email" placeholder="E-mail">
-      <input v-model="signupData.senha" type="password" placeholder="Senha">
-      <button @click.prevent="cadastro(signupData.email, signupData.senha)">Cadastrar</button>
-    </form>
-    <hr>
-    <form class="form">
-      <h2>Login</h2>
-      <input v-model="signinData.email" type="email" placeholder="E-mail">
-      <input v-model="signinData.senha" type="password" placeholder="Senha">
-      <button @click.prevent="login(signinData.email, signinData.senha)">Entrar</button>
-    </form>
+  <div class="flex">
+    <Transition name="form-transition" mode="out-in">
+      <form class="container sm:border sm:rounded-2xl sm:p-10 sm:bg-gray-950" v-if="formChoice === 'login'">
+        <h2 class="text-3xl font-semibold mb-8 uppercase">Login</h2>
+        <input 
+          v-model="signinData.email" 
+          class="w-full p-4 rounded-md mb-2" 
+          type="email" placeholder="E-mail"
+        />
+        <input 
+          v-model="signinData.senha" 
+          class="w-full p-4 rounded-md mb-2"
+          type="password" placeholder="Senha"
+        />
+        <button
+          class="bg-lime-700 w-full mt-4 rounded-3xl"
+          @click.prevent="login(signinData.email, signinData.senha)"
+        >
+          Entrar
+        </button>
+        <p class="mt-8">
+          Não possui conta? 
+          <a @click.prevent="formChoice = 'register'" class="cursor-pointer underline text-gray-300">
+            Crie aqui
+          </a>
+        </p>
+      </form>
+
+      <form class="container sm:border sm:rounded-2xl sm:p-10 sm:bg-gray-950" v-else>
+        <h2 class="text-3xl font-semibold mb-8 uppercase">Cadastro</h2>
+        <input 
+          v-model="signupData.email" 
+          class="w-full p-4 rounded-md mb-2"
+          type="email" placeholder="E-mail"
+        />
+        <input 
+          v-model="signupData.senha"
+          class="w-full p-4 rounded-md mb-2"
+          type="password" placeholder="Senha"
+        />
+        <button
+          class="bg-lime-700 w-full mt-4 rounded-3xl"
+          @click.prevent="cadastro(signupData.email, signupData.senha)"
+        >
+          Cadastrar
+        </button>
+        <p class="mt-8">
+          Já possui conta? 
+          <a @click.prevent="formChoice = 'login'" class="cursor-pointer underline text-gray-300">
+            Faça login
+          </a>
+        </p>
+      </form>
+    </Transition>
+
   </div>
 </template>
 
 <script setup lang='ts'>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { registerUser, signIn } from '../connections/account'
+
+const formChoice = ref('login')
 
 const signupData = reactive({
 	email: '',
@@ -52,42 +95,11 @@ const login = async (email:string, senha: string) => {
 </script>
 
 <style scoped>
-.form-container {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+.form-transition-enter-active, .form-transition-leave-active {
+  transition: opacity 0.8s, transform 0.8s;
 }
-
-hr {
-  height: 30dvh;
-}
-
-.form {
-  width: 45%; /* Ajuste a largura conforme necessário */
-  padding: 20px;
-  border-radius: 5px;
-}
-
-input {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #4caf50;
-  color: white;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
+.form-transition-enter, .form-transition-leave-to {
+  opacity: 0;
+  transform: translateY(50px);
 }
 </style>
